@@ -28,12 +28,12 @@ server.get("/:id", (req, res) => {
 server.post("/", (req, res) => {
   const newAccount = req.body;
   db("accounts")
-    .insert(newAccount)
+    .insert(newAccount, "id")
     .then((id) => {
       db("accounts")
         .where({ id: id[0] })
-        .first()
-        .then((account) => res.status(200).json(account));
+        .then((account) => res.status(200).json(account))
+        .catch((err) => res.status(404).json({ error: "error adding", err }));
     })
     .catch((err) => res.status(500).json({ error: err }));
 });
